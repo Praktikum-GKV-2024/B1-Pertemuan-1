@@ -1,2 +1,2 @@
 # B1-Pertemuan-2
-Pengumpulan tugas 2
+Pengumpulan tugas pertemuan 2 (Tugas pertama)
