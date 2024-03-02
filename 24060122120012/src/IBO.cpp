@@ -35,6 +35,7 @@ public:
     GLuint buffer;
     GLuint ibo;
     GLuint programId;
+    GLuint colorbuffer;
 
     MainScene (GLFWwindow* window) {
         this->window = window;
@@ -55,17 +56,48 @@ public:
     void start() {
         programId = LoadShaders("res/shader/super_basic.vs", "res/shader/super_basic.fs");
 
+        float g_color_buffer_data[] = {
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+        };
+
         // vertecies yang di pass ke GPU
         float positions[] = {
-             0.5f,  0.5f, // 0
-             0.5f, -0.5f, // 1
-            -0.5f, -0.5f, // 2
-            -0.5f,  0.5f  // 3
+            0.0f, 0.0f, // 0
+            0.3f,  0.0f, // 1
+            0.0f, -0.3f, // 2
+            -0.3f, 0.0f, // 3
+            0.0f, 0.3f, // 4
+
+            0.5f,  0.0f, // 5
+            0.0f, -0.5f, // 6
+            -0.5f, 0.0f, // 7
+            0.0f, 0.5f, // 8
+
+            0.8f,  0.0f, // 9
+            0.0f, -0.8f, // 10
+            -0.8f, 0.0f, // 11
+            0.0f, 0.8f, // 12
         };
 
         unsigned int indices[] = {
             0, 1, 2,
-            2, 3, 0
+            0, 2, 3,
+            0, 3, 4,
+            0, 4, 1,
+
+            1, 8, 4,
+            4, 7, 8,
         };
 
         // Initialize Vertex Array Buffer
@@ -75,7 +107,8 @@ public:
         // setup vertex buffers
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+        // glBufferData(GL_ARRAY_BUFFER, 3 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 13 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
 
         // setting the layout
         glEnableVertexAttribArray(0);
@@ -90,12 +123,28 @@ public:
 
         glGenBuffers(1, &ibo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
         glBindVertexArray(0);
         glUseProgram(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        // Colors
+        glGenBuffers(1, &colorbuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+        glBufferData(GL_ARRAY_BUFFER, 13 * 3 * sizeof(float), g_color_buffer_data, GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(
+            1,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            3 * sizeof(float), 
+            g_color_buffer_data
+        );
+        
 
     }
 
@@ -108,7 +157,7 @@ public:
         glBindVertexArray(vao);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, nullptr);
 
 
         // glDrawArrays(GL_TRIANGLES, 0, 3);
