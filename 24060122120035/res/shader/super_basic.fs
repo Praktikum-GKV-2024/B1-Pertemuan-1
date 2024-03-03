@@ -1,10 +1,9 @@
+
 #version 330 core
+out vec4 FragColor;
 
-// Output data
-layout(location = 0) out vec4 color;
+in vec3 color; // receive color from vertex shader
 
-void main(){
-
-	// Output color, warna yang akan digambar ke layar
-	color = vec4(1., 0., 0., 1.);
+void main() {
+    FragColor = vec4(color, 1.0); // set fragment color
 }
