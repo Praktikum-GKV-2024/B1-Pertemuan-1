@@ -30,6 +30,7 @@ static void GLLogCall(const char* function_name, const char* file, int line) {
 
 class MainScene {
 public:
+    GLuint colorbuffer;
     GLFWwindow* window;
     GLuint vao;
     GLuint buffer;
@@ -57,15 +58,60 @@ public:
 
         // vertecies yang di pass ke GPU
         float positions[] = {
-             0.5f,  0.5f, // 0
-             0.5f, -0.5f, // 1
-            -0.5f, -0.5f, // 2
-            -0.5f,  0.5f  // 3
+             0.3f,  0.0f, //0 A1
+             0.0f, -0.3f, //1 A2
+            -0.3f,  0.0f, //2 A3
+             0.0f,  0.3f, //3 A4
+            -0.5f,  0.0f, //4 A7
+             0.0f,  0.5f, //5 A8
+             0.5f,  0.0f, //6 A5
+             0.0f, -0.5f, //7 A6
+             0.0f, -0.8f, //8 A10
+             0.8f,  0.0f, //9 A9
+             0.0f,  0.8f, //10 A12
+            -0.8f,  0.0f, //11 A11
+             0.0f,  0.0f //12 A0
+             
+        };
+        float g_color_buffer_data[] = {
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,  
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            1.0f, 1.0f, 1.0f
         };
 
+
         unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0
+            0, 1, 12,
+            1, 2, 12,//a1,a2,a3
+            2, 3, 12,
+            3, 0, 12,
+            3, 5, 4,//a4,a8,a7
+            0, 5, 3,//a1,a8,a4
+            0, 6, 5,//a1,a5,a6
+            0, 1, 6,//a1,a2,a5
+            1, 7, 6,//a2,a6,a5
+            1, 7, 2,//a2,a6,a3
+            2, 4, 3, //a3,a7,a4
+            2, 4, 7,//a3,a7,a6
+            4, 8, 7,//a7,a10,a6
+            7, 9, 8,//a6,a9,a10
+            5, 10, 6, //A8,A12,a5
+            10, 6, 9,//a12,a5,a9
+            9, 6, 7,//a9,a5,a6
+            10, 11, 5,//a12,a11,a8
+            11, 4, 5,//a11,a7,a8
+            11, 8, 4//a11,a10,a7
+
         };
 
         // Initialize Vertex Array Buffer
@@ -75,7 +121,7 @@ public:
         // setup vertex buffers
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 2 * 20 * sizeof(float), positions, GL_STATIC_DRAW);
 
         // setting the layout
         glEnableVertexAttribArray(0);
@@ -90,13 +136,27 @@ public:
 
         glGenBuffers(1, &ibo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 20 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
+
+        glGenBuffers(1, &colorbuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+        glBufferData(GL_ARRAY_BUFFER, 13 * 3 * sizeof(float), g_color_buffer_data, GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(
+            1,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            3 * sizeof(float),
+            0
+        );
 
         glBindVertexArray(0);
         glUseProgram(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
     }
 
     void update() {
@@ -108,9 +168,9 @@ public:
         glBindVertexArray(vao);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, 62, GL_UNSIGNED_INT, nullptr);
 
 
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
     }
 };
