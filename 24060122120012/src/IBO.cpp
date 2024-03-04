@@ -57,18 +57,22 @@ public:
         programId = LoadShaders("res/shader/super_basic.vs", "res/shader/super_basic.fs");
 
         float g_color_buffer_data[] = {
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
+            1.0f, 1.0f, 1.0f, //0
+
+            1.0f, 0.0f, 0.0f, //1
+            1.0f, 0.0f, 0.0f, //2
+            1.0f, 0.0f, 0.0f, //3
+            1.0f, 0.0f, 0.0f, //4
+
+            0.0f, 1.0f, 0.0f, //5
+            0.0f, 1.0f, 0.0f, //6
+            0.0f, 1.0f, 0.0f, //7
+            0.0f, 1.0f, 0.0f, //8
+
+            0.0f, 0.0f, 1.0f, //9
+            0.0f, 0.0f, 1.0f, //10
+            0.0f, 0.0f, 1.0f, //11
+            0.0f, 0.0f, 1.0f, //12
         };
 
         // vertecies yang di pass ke GPU
@@ -95,9 +99,30 @@ public:
             0, 2, 3,
             0, 3, 4,
             0, 4, 1,
+            
+            1, 5, 8,
+            1, 5, 2,
+            1, 4, 8,
+            
+            2, 6, 5,
+            2, 6, 3,
 
-            1, 8, 4,
-            4, 7, 8,
+            3, 7, 6,
+            3, 7, 4,
+
+            4, 8, 7,
+
+            5, 9, 12,
+            5, 9, 6,
+            5, 8, 12,
+
+            6, 10, 9,
+            6, 10, 7,
+
+            7, 11, 10,
+            7, 11, 8,
+
+            8, 12, 11,
         };
 
         // Initialize Vertex Array Buffer
@@ -123,12 +148,7 @@ public:
 
         glGenBuffers(1, &ibo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-
-        glBindVertexArray(0);
-        glUseProgram(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 20 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
         // Colors
         glGenBuffers(1, &colorbuffer);
@@ -142,9 +162,13 @@ public:
             GL_FLOAT,
             GL_FALSE,
             3 * sizeof(float), 
-            g_color_buffer_data
+            0
         );
         
+        glBindVertexArray(0);
+        glUseProgram(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     }
 
@@ -157,7 +181,7 @@ public:
         glBindVertexArray(vao);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-        glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, 20 * 3, GL_UNSIGNED_INT, nullptr);
 
 
         // glDrawArrays(GL_TRIANGLES, 0, 3);
