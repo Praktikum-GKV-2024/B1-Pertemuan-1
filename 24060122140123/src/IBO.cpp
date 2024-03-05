@@ -39,7 +39,7 @@ public:
     MainScene (GLFWwindow* window) {
         this->window = window;
 
-        glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+        glClearColor(0.698f, 0.796f, 0.871f, 0.0f);
 
         // Enable depth test
         glEnable(GL_DEPTH_TEST);
@@ -57,15 +57,66 @@ public:
 
         // vertecies yang di pass ke GPU
         float positions[] = {
-             0.5f,  0.5f, // 0
-             0.5f, -0.5f, // 1
-            -0.5f, -0.5f, // 2
-            -0.5f,  0.5f  // 3
+            // 0.5f,  0.5f, // 0
+            // 0.5f, -0.5f, // 1
+            // -0.5f, -0.5f, // 2
+            // -0.5f,  0.5f  // 3
+
+            // segitiga coquette 1.0
+            // 0.0f,  0.0f, //0
+            // 0.5f,  0.5f, //1
+            // 0.5f,  -0.1f, //2
+            // -0.5f,  0.5f, //3
+            // -0.5f,  -0.1f, //4
+            // 0.5f,  -0.5f, //5
+            // 0.1f,  -0.5f, //6
+            // -0.5f,  -0.5f, //7
+            // -0.1f,  -0.5f, //8
+
+            //segitiga coquette 2.0
+            0.0f,  0.0f,        0.878f, 0.129f, 0.541f, //0
+            0.5f,  0.5f,        0.878f, 0.129f, 0.541f, //1
+            0.5f,  0.3f,        1.0f, 1.0f, 1.0f, //2
+            0.5f,  0.1f,        1.0f, 1.0f, 1.0f, //3
+            0.5f,  -0.1f,       0.878f, 0.129f, 0.541f,//4
+            -0.5f,  0.5f,       0.878f, 0.129f, 0.541f, //5
+            -0.5f,  0.3f,       1.0f, 1.0f, 1.0f, //6
+            -0.5f,  0.1f,       1.0f, 1.0f, 1.0f, //7
+            -0.5f,  -0.1f,      0.878f, 0.129f, 0.541f, //8
+            -0.5f,  -0.5f,      0.878f, 0.129f, 0.541f, //9
+            -0.2f, -0.4f,       0.969f, 0.831f, 0.91f, //10
+            -0.1f,  -0.5f,      0.878f, 0.129f, 0.541f, //11
+            0.1f,  -0.5f,       0.878f, 0.129f, 0.541f, //12
+            0.2f, -0.4f,        0.969f, 0.831f, 0.91f, //13
+            0.5f,  -0.5f,       0.878f, 0.129f, 0.541f, //14
+            
         };
 
         unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0
+            // 0, 1, 2,
+            // 2, 3, 0
+
+            0, 1, 2, 
+            1, 2, 0,
+            0, 2, 3,
+            2, 3, 0,
+            0, 3, 4,
+            3, 4, 0, 
+            0, 5, 6,
+            5, 6, 0,
+            0, 6, 7, 
+            6, 7, 0,
+            0, 7, 8, 
+            7, 8, 0,
+            0, 9, 10, 
+            9, 10, 0,
+            0, 10, 11, 
+            10, 11, 0,
+            0, 12, 13, 
+            12, 13, 0,
+            0, 13, 14, 
+            13, 14, 0
+
         };
 
         // Initialize Vertex Array Buffer
@@ -75,7 +126,7 @@ public:
         // setup vertex buffers
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 20 * 5 * sizeof(float), positions, GL_STATIC_DRAW);
 
         // setting the layout
         glEnableVertexAttribArray(0);
@@ -84,13 +135,23 @@ public:
             2, // vector size of data type
             GL_FLOAT, // data type
             GL_FALSE, // normalized? map to 0 - 255
-            2 * sizeof(float), // gaps
-            0                  // offset
+            5 * sizeof(float), // stride (size of vertex)
+            0 //offset 
+        );
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(
+            1, // index untuk layout VAO
+            3, // vector size of data type
+            GL_FLOAT, // data type
+            GL_FALSE, // normalized? map to 0 - 255
+            5 * sizeof(float), // stride (size of vertex)
+            (void*)(2 * sizeof(float)) // offset (colors, after positions)
         );
 
         glGenBuffers(1, &ibo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 20 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
         glBindVertexArray(0);
         glUseProgram(0);
@@ -108,8 +169,8 @@ public:
         glBindVertexArray(vao);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
+        glDrawElements(GL_TRIANGLES, 20 * 3, GL_UNSIGNED_INT, nullptr);
+    
 
         // glDrawArrays(GL_TRIANGLES, 0, 3);
     }
