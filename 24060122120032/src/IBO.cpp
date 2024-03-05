@@ -57,15 +57,124 @@ public:
 
         // vertecies yang di pass ke GPU
         float positions[] = {
-             0.5f,  0.5f, // 0
-             0.5f, -0.5f, // 1
-            -0.5f, -0.5f, // 2
-            -0.5f,  0.5f  // 3
+            0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+
+            0.3f, 0.0f,  1.0f, 0.0f, 0.0f,//A1
+            0.0f, -0.3f,  1.0f, 0.0f, 0.0f,//A2
+            -0.3f, 0.0f,  1.0f, 0.0f, 0.0f,//A3 
+            0.0f, 0.3f,   1.0f, 0.0f, 0.0f,//A4
+
+            0.5f, 0.0f,  0.0f, 1.0f, 0.0f,//A5  
+            0.0f, -0.5f,  0.0f, 1.0f, 0.0f,//A6
+            -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,//A7
+            0.0f, 0.5f,   0.0f, 1.0f, 0.0f,//A8
+
+            0.8f, 0.0f,  0.0f, 0.0f, 1.0f,//A9
+            0.0f, -0.8f, 0.0f, 0.0f, 1.0f,//A10
+           -0.8f, 0.0f,  0.0f, 0.0f, 1.0f,//A11
+            0.0f, 0.8f,  0.0f, 0.0f, 1.0f//A12
+            
+            // 0.0f, 0.8f, 0.0f, 0.0f, 1.0f, // A12 (0)
+            // -0.8f, 0.0f, 0.0f, 0.0f, 1.0f, // A11 (1)
+            // 0.0f, -0.8f, 0.0f, 0.0f, 1.0f, //A10 (2)
+            // 0.8f, 0.0f, 0.0f, 0.0f, 1.0f, //A9 (3)
+
+            // 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, //A8 (4)
+            // -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,//A7 (5)
+            // 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, //A6 (6)
+            // 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, //A5 (7)
+
+            // 0.0f, 0.3f, 1.0f, 0.0f, 0.0f, //A4 (8)
+            // -0.3f, 0.0f, 1.0f, 0.0f, 0.0f, //A3 (9)
+            // 0.0f, -0.3f, 1.0f, 0.0f, 0.0f, //A2 (10)
+            // 0.3f,  0.0f, 1.0f, 0.0f, 0.0f, //A1 (11)
+
+            // 0.0f, 0.0f, 0.0f, 0.0f, 0.0f // A0 (12)
         };
 
         unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0
+            0, 1, 2, 
+            0, 2, 3,
+            0, 3, 4,
+            0, 4, 1,
+
+            1, 4, 8,
+            4, 8, 1,
+
+            1, 5, 8,
+            5, 8, 1,
+
+            1, 2, 5,
+            2, 5, 1,
+
+            2, 5, 6, 
+            5, 6, 2,
+
+            2, 3, 6,
+            3, 6, 2,
+
+            3, 6, 7,
+            6, 7, 3,
+
+            3, 4, 7,
+            4, 7, 3,
+
+            4, 7, 8,
+            7, 8, 4,
+
+            5, 8, 12,
+            8, 12, 5,
+
+            5, 9, 12,
+            9, 12, 5,
+
+            5, 6, 9,
+            6, 9, 5,
+
+            6, 9, 10,
+            9, 10, 6,
+
+            6, 7, 10,
+            7, 10, 6,
+
+            7, 10, 11,
+            10, 11, 7,
+
+            7, 8, 11,
+            8, 11, 7,
+
+            8, 11, 12,
+            11, 12, 8,
+            // 0, 1, 4,
+            // 0, 3, 7,
+            // 0, 7, 4,
+
+            // 1, 4, 5,
+            // 1, 2, 5,
+
+            // 2, 5, 6,
+            // 2, 6, 3,
+
+            // 3, 6, 7,
+            
+            // 4, 5, 8,
+            // 4, 7, 11,
+
+            // 5, 8, 9,
+            // 5, 6, 9,
+
+            // 6, 9, 10,
+            // 6, 7, 10,
+
+            // 7, 10, 11,
+
+            // 8, 9, 12,
+            // 8, 11, 12,
+
+            // 9, 10, 12,
+
+            // 10, 11, 12
+
         };
 
         // Initialize Vertex Array Buffer
@@ -75,7 +184,7 @@ public:
         // setup vertex buffers
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 5 * 13 * sizeof(float), positions, GL_STATIC_DRAW);
 
         // setting the layout
         glEnableVertexAttribArray(0);
@@ -84,13 +193,24 @@ public:
             2, // vector size of data type
             GL_FLOAT, // data type
             GL_FALSE, // normalized? map to 0 - 255
-            2 * sizeof(float), // gaps
+            5 * sizeof(float), // gaps
             0                  // offset
+        );
+
+        // setting the layout
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(
+            1, // index untuk layout VAO
+            3, // vector size of data type
+            GL_FLOAT, // data type
+            GL_FALSE, // normalized? map to 0 - 255
+            5 * sizeof(float), // gaps
+            (void*)(2 * sizeof(float))                  // offset
         );
 
         glGenBuffers(1, &ibo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
         glBindVertexArray(0);
         glUseProgram(0);
@@ -108,7 +228,7 @@ public:
         glBindVertexArray(vao);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, 108, GL_UNSIGNED_INT, nullptr);
 
 
         // glDrawArrays(GL_TRIANGLES, 0, 3);
