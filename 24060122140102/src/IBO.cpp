@@ -65,7 +65,7 @@ public:
              0.4f,   0.25f, 0.9, 0.7, 0.8, //  4 M pastel pink
              0.3f,   0.0f,  0.8, 0.6, 0.6, //  5 L pastel merah
              0.4f,  -0.25f, 0.9, 0.7, 0.8, //  6 K pastel pink
-             0.15f, -0.2f,  0.8, 0.6, 0.6, //  7 J pastel merah
+             0.15f, -0.25f,  0.8, 0.6, 0.6, //  7 J pastel merah
 
              0.0f,  -0.5f,  0.9, 0.7, 0.8, //  8 I pastel pink
             -0.15,  -0.25,  0.8, 0.6, 0.6, //  9 H pastel merah
