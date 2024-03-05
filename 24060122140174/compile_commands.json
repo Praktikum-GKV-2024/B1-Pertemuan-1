@@ -1,0 +1,8 @@
+[
+{
+  "directory": "D:/Prak GKV/Tugas GKV/Template-GLFW/build",
+  "command": "C:\\ProgramData\\mingw64\\mingw64\\bin\\g++.exe -DGLEW_STATIC @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\main.dir\\src\\main.cpp.obj -c \"D:\\Prak GKV\\Tugas GKV\\Template-GLFW\\src\\main.cpp\"",
+  "file": "D:/Prak GKV/Tugas GKV/Template-GLFW/src/main.cpp",
+  "output": "CMakeFiles/main.dir/src/main.cpp.obj"
+}
+]
