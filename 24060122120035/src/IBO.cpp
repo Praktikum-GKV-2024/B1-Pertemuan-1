@@ -1,3 +1,6 @@
+//Nama : Abdul Majid
+//NIM  : 24060122120035
+
 #define GLM_FORCE_PURE
 
 #include <GL/glew.h>
@@ -39,7 +42,7 @@ public:
     MainScene (GLFWwindow* window) {
         this->window = window;
 
-        glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         // Enable depth test
         glEnable(GL_DEPTH_TEST);
@@ -57,15 +60,70 @@ public:
 
         // vertecies yang di pass ke GPU
         float positions[] = {
-             0.5f,  0.5f, // 0
-             0.5f, -0.5f, // 1
-            -0.5f, -0.5f, // 2
-            -0.5f,  0.5f  // 3
+           0.0f , 0.0f, //A0
+           0.3f , 0.0f, //A1
+           0.0f , -0.3f,//A2
+           -0.3f , 0.0f, //A3
+           0.0f , 0.3f , //A4
+
+           0.5f , 0.0f, //A5
+           0.0f , -0.5f,//A6
+           -0.5f , 0.0f, //A7
+           0.0f , 0.5f , //A8
+
+           0.8f , 0.0f, //A9
+           0.0f , -0.8f,//A10
+           -0.8f , 0.0f, //A11
+           0.0f , 0.8f , //A12
+        };
+        float colors[] = {
+            // atas
+            1.0f, 1.0f, 1.0f, // putih
+
+            1.0f, 0.0f, 0.0f, // merah
+            1.0f, 0.0f, 0.0f, // merah
+            1.0f, 0.0f, 0.0f, // merah
+            1.0f, 0.0f, 0.0f, // merah
+
+            // kiri bawah
+            0.0f, 1.0f, 0.0f, // hijau
+            0.0f, 1.0f, 0.0f, // hijau
+            0.0f, 1.0f, 0.0f, // hijau
+            0.0f, 1.0f, 0.0f, // hijau
+
+            // kanan bawah
+            0.0f, 0.0f, 1.0f, // biru
+            0.0f, 0.0f, 1.0f, // biru
+            0.0f, 0.0f, 1.0f,  // biru
+            0.0f, 0.0f, 1.0f  // biru
         };
 
+
         unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0
+            
+            0,1,2,
+            0,2,3,
+            0,3,4,
+            0,4,1,
+
+            4,8,1,
+            8,1,5,
+            1,5,2,
+            5,2,6,
+            2,3,6,
+            3,6,7,
+            3,7,4,
+            7,4,8,
+
+            12,5,8,
+            12,5,9,
+            6,9,5,
+            6,9,10,
+            7,10,6,
+            7,10,11,
+            11,8,7,
+            11,8,12
+            
         };
 
         // Initialize Vertex Array Buffer
@@ -75,7 +133,7 @@ public:
         // setup vertex buffers
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER,13*2* sizeof(float), positions, GL_STATIC_DRAW);
 
         // setting the layout
         glEnableVertexAttribArray(0);
@@ -87,10 +145,26 @@ public:
             2 * sizeof(float), // gaps
             0                  // offset
         );
+        // setup vertex buffers for color
+        GLuint colorBuffer;
+        glGenBuffers(1, &colorBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+        glBufferData(GL_ARRAY_BUFFER, 13 * 3 * sizeof(float), colors, GL_STATIC_DRAW);
+
+        // setting the layout for color
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(
+            1, // index untuk layout VAO
+            3, // vector size of data type (RGB)
+            GL_FLOAT, // data type
+            GL_FALSE, // normalized? map to 0 - 1
+            3 * sizeof(float), // gaps
+            0                  // offset
+        );
 
         glGenBuffers(1, &ibo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 20 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
         glBindVertexArray(0);
         glUseProgram(0);
@@ -108,7 +182,7 @@ public:
         glBindVertexArray(vao);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES,20*3, GL_UNSIGNED_INT, nullptr);
 
 
         // glDrawArrays(GL_TRIANGLES, 0, 3);
