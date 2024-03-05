@@ -57,15 +57,43 @@ public:
 
         // vertecies yang di pass ke GPU
         float positions[] = {
-             0.5f,  0.5f, // 0
-             0.5f, -0.5f, // 1
-            -0.5f, -0.5f, // 2
-            -0.5f,  0.5f  // 3
+             0.0f,   0.5f,  0.9, 0.7, 0.8, //  0 A pastel pink
+             0.15f,  0.25,  0.8, 0.6, 0.6, //  1 B pastel merah
+             0.0f,   0.0f,  0.6, 0.0, 0.0, //  2 C maroon
+            -0.15f,  0.25f, 0.8, 0.6, 0.6, //  3 D pastel merah
+
+             0.4f,   0.25f, 0.9, 0.7, 0.8, //  4 M pastel pink
+             0.3f,   0.0f,  0.8, 0.6, 0.6, //  5 L pastel merah
+             0.4f,  -0.25f, 0.9, 0.7, 0.8, //  6 K pastel pink
+             0.15f, -0.25f,  0.8, 0.6, 0.6, //  7 J pastel merah
+
+             0.0f,  -0.5f,  0.9, 0.7, 0.8, //  8 I pastel pink
+            -0.15,  -0.25,  0.8, 0.6, 0.6, //  9 H pastel merah
+            -0.4f,  -0.25f, 0.9, 0.7, 0.8, // 10 G pastel pink
+            -0.3f,   0.0f,  0.8, 0.6, 0.6, // 11 F pastel merah
+            -0.4f,   0.25f, 0.9, 0.7, 0.8  // 12 E pastel pink
+             
         };
 
         unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0
+            2, 1, 0,    // C, B, A
+            0, 3, 2,    //A, D, C
+
+            2, 1, 4,    // C, B, M
+            4, 5, 2,    // M, L, C
+
+            2, 5, 6,    // C, L, K
+            6, 7, 2,    // K, J, C
+
+            2, 7, 8,    // C, J, I
+            8, 9, 2,    // I, H, C
+
+            2, 9, 10,   // C, H, G
+            10, 11, 2,  //G, F, C
+
+            2, 11, 12,  //C, F, E
+            12, 3, 2    // E, D, C
+
         };
 
         // Initialize Vertex Array Buffer
@@ -75,7 +103,7 @@ public:
         // setup vertex buffers
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 5 * 13 * sizeof(float), positions, GL_STATIC_DRAW); 
 
         // setting the layout
         glEnableVertexAttribArray(0);
@@ -84,13 +112,23 @@ public:
             2, // vector size of data type
             GL_FLOAT, // data type
             GL_FALSE, // normalized? map to 0 - 255
-            2 * sizeof(float), // gaps
+            5 * sizeof(float), // gaps
             0                  // offset
+        );
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(
+            1,                          // index untuk layout VAO
+            3,                          // vector size of data type
+            GL_FLOAT,                   // data type
+            GL_FALSE,                   // normalized?
+            5 * sizeof(float),          // gaps
+            (void *)(2 * sizeof(float)) // offset
         );
 
         glGenBuffers(1, &ibo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 12 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW); 
 
         glBindVertexArray(0);
         glUseProgram(0);
@@ -108,7 +146,7 @@ public:
         glBindVertexArray(vao);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT, nullptr); 
 
 
         // glDrawArrays(GL_TRIANGLES, 0, 3);
