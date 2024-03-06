@@ -6,17 +6,15 @@ SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../)
 
 # Add include directories
-INCLUDE_DIRECTORIES(include) # This project
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../include) # Shared include
+INCLUDE_DIRECTORIES(include)
 
 # to easily compile multiple singular executable
 MACRO(COMPILE name)
     ADD_EXECUTABLE(${name} ${ARGN})
     IF(WIN32) 
         target_link_libraries(${name}
-            # Shared include
-            ${CMAKE_SOURCE_DIR}/../lib/libglfw3.a
-            ${CMAKE_SOURCE_DIR}/../lib/glew32s.lib
+            ${CMAKE_SOURCE_DIR}/lib/libglfw3.a
+            ${CMAKE_SOURCE_DIR}/lib/glew32s.lib
             # ${CMAKE_SOURCE_DIR}/libassimp-5.dll
             # glu32
             opengl32

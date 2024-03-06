@@ -26,7 +26,7 @@ public:
     MainScene (GLFWwindow* window) {
         this->window = window;
 
-        glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
         // Enable depth test
         glEnable(GL_DEPTH_TEST);
