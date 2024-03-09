@@ -35,6 +35,7 @@ public:
     GLuint buffer;
     GLuint ibo;
     GLuint programId;
+    GLint triangleColorLoc; 
 
     MainScene (GLFWwindow* window) {
         this->window = window;
@@ -52,65 +53,101 @@ public:
         start();
     }
 
-    void start() {
-        programId = LoadShaders("res/shader/super_basic.vs", "res/shader/super_basic.fs");
+void start() {
+    programId = LoadShaders("res/shader/super_basic.vs", "res/shader/super_basic.fs");
 
-        // vertecies yang di pass ke GPU
         float positions[] = {
-             0.5f,  0.5f, // 0
-             0.5f, -0.5f, // 1
-            -0.5f, -0.5f, // 2
-            -0.5f,  0.5f  // 3
-        };
+            0.f,  0.f,     1.0, 1.0, 1.0, // A0 - White
+            0.3f, 0.f,     1.0, 0.0, 0.0, // A1 - Red
+            0.f, -0.3f,    1.0, 0.0, 0.0, // A2 - Red
+            -0.3f, 0.f,    1.0, 0.0, 0.0, // A3 - Red
+            0.f, 0.3f,     1.0, 0.0, 0.0, // A4 - Red
+            0.5f, 0.f,     0.0, 1.0, 0.0, // A5 - Green
+            0.f, -0.5f,    0.0, 1.0, 0.0, // A6 - Green
+            -0.5f, 0.f,    0.0, 1.0, 0.0, // A7 - Green
+            0.f, 0.5f,     0.0, 1.0, 0.0, // A8 - Green
+            0.8f, 0.f,     0.0, 0.0, 1.0, // A9 - Blue
+            0.f, -0.8f,    0.0, 0.0, 1.0, // A10 - Blue
+            -0.8f, 0.f,    0.0, 0.0, 1.0, // A11 - Blue
+            0.f, 0.8f,     0.0, 0.0, 1.0  // A12 - Blue
+};
 
-        unsigned int indices[] = {
+
+ unsigned int indices[] = {
             0, 1, 2,
-            2, 3, 0
+            0, 2, 3,
+            0, 3, 4,
+            0, 1, 4,
+            1, 5, 8,
+            1, 5, 2,
+            2, 5, 6,
+            2, 6, 3,
+            3, 7, 6,
+            3, 7, 4,
+            4, 7, 8,
+            1, 4, 8,
+            5, 12, 9,
+            5, 9, 6,
+            6, 9, 10,
+            6, 7, 10,
+            7, 10, 11,
+            7, 8, 11,
+            8, 11,12,
+            8, 5, 12
+
         };
 
-        // Initialize Vertex Array Buffer
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
+    // Initialize Vertex Array Buffer
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
-        // setup vertex buffers
-        glGenBuffers(1, &buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+    // Setup vertex buffers
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 5 * 13 * sizeof(float), positions, GL_STATIC_DRAW);
+    
+    // Setting the layout
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(
+    0, // Index untuk layout VAO
+    2, // Vector size of position
+    GL_FLOAT, // Data type
+    GL_FALSE, // Normalized? Map to 0 - 255
+    5 * sizeof(float), // Stride (position + color)
+    0 // Offset for position
+    );
+    
+    // Setting the layout for color
+    glEnableVertexAttribArray(1); // Aktifkan atribut warna
+    glVertexAttribPointer(
+    1, // Index untuk layout VAO (warna)
+    3, // Vector size of color (RGB)
+    GL_FLOAT, // Data type
+    GL_FALSE, // Normalized? Map to 0 - 255
+    5 * sizeof(float), // Stride (position + color)
+    (void*)(2 * sizeof(float)) // Offset for color
+);
 
-        // setting the layout
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(
-            0, // index untuk layout VAO
-            2, // vector size of data type
-            GL_FLOAT, // data type
-            GL_FALSE, // normalized? map to 0 - 255
-            2 * sizeof(float), // gaps
-            0                  // offset
-        );
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 20 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
-        glGenBuffers(1, &ibo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+    glBindVertexArray(0);
+    glUseProgram(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
 
-        glBindVertexArray(0);
-        glUseProgram(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+void update() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    }
+    glUseProgram(programId);
 
-    void update() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        /* do every frame here*/
-        glUseProgram(programId);
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-        glBindVertexArray(vao);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    // Segitiga 
+    glDrawElements(GL_TRIANGLES, 20 * 3, GL_UNSIGNED_INT, nullptr);
+}
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
-    }
 };
